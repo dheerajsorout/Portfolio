@@ -154,4 +154,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }, { margin: '0px 0px -50px 0px' });
         }
     }
+
+    // ── Mobile Menu Toggle ──
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinksList = document.querySelectorAll('.nav-list a');
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            document.body.classList.toggle('nav-open');
+        });
+    }
+
+    navLinksList.forEach(link => {
+        link.addEventListener('click', () => {
+            document.body.classList.remove('nav-open');
+        });
+    });
 });
