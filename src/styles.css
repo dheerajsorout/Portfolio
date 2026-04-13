@@ -514,6 +514,28 @@ h3 {
     font-weight: bold;
 }
 
+.about-list-numbered {
+    padding-left: 22px;
+}
+
+.about-list-numbered li {
+    padding-left: 0;
+    margin-bottom: 10px;
+}
+
+.about-list-numbered li::before {
+    content: none;
+}
+
+.about-summary {
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-main);
+}
+
 /* Experience Section */
 .experience-grid {
     display: grid;

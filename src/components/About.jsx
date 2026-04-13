@@ -1,6 +1,25 @@
 import { motion } from 'framer-motion';
 
 const About = () => {
+    const coreCompetencies = [
+        'HTML: creating responsive and interactive web pages.',
+        'CSS: Styling responsive and interactive web pages.',
+        'React: Creating dynamic and reusable UI components.',
+        'JavaScript: Build logics and working infrastructure.',
+        'MongoDB: Efficient database design and CRUD operations.',
+        'Express.js: Building robust backend services and APIs.',
+        'Node.js: Full-stack JavaScript environment for seamless development.'
+    ];
+
+    const keyResponsibilities = [
+        'Full-stack development: Client-side and server-side integration.',
+        'API development: Designing RESTful APIs.',
+        'Database management: Optimizing data storage and retrieval.',
+        'Debugging & Maintenance: Improving performance and fixing issues.',
+        'Collaboration: Working with cross-functional teams effectively.',
+        'Continuous learning: Staying up-to-date with latest web technologies.'
+    ];
+
     return (
         <section id="about" className="about section">
             <motion.h2 
@@ -18,7 +37,7 @@ const About = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
             >
-                I am a passionate <strong>MERN Stack Developer</strong> leveraging technologies like React.js, Next.js, Node.js, and MongoDB to create robust web applications. With hands-on experience in AI integrations and building platforms from the ground up, I focus on delivering scalable and elegant solutions tailored to real-world needs.
+                Hello! It&apos;s <strong>Rahul Beniwal</strong>, a <strong>MERN Stack Developer</strong> and <strong>UI/UX Designer</strong> with 1.3+ years of experience building responsive and user-friendly web applications. I can handle both Frontend and Backend perfectly. My core JavaScript and React skills are strong. I specialize in turning complex problems into simple, elegant solutions.
             </motion.p>
             
             <div className="about-grid">
@@ -29,17 +48,12 @@ const About = () => {
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 }}
                 >
-                    <h3 className="accent">Education</h3>
-                    <ul className="about-list" style={{ listStyleType: 'none', marginLeft: 0 }}>
-                        <li style={{ marginBottom: '20px' }}>
-                            <strong>Bachelor of Computer Applications (BCA)</strong><br />
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.9em' }}>J.C. Bose University of Science and Technology (YMCA), Faridabad</span>
-                        </li>
-                        <li>
-                            <strong>Senior Secondary (12th)</strong><br />
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.9em' }}>H.B.S.E Board</span>
-                        </li>
-                    </ul>
+                    <h3 className="accent">Core Competencies</h3>
+                    <ol className="about-list about-list-numbered">
+                        {coreCompetencies.map((item) => (
+                            <li key={item}>{item}</li>
+                        ))}
+                    </ol>
                 </motion.div>
                 <motion.div 
                     className="responsibilities"
@@ -48,15 +62,24 @@ const About = () => {
                     viewport={{ once: true }}
                     transition={{ delay: 0.6 }}
                 >
-                    <h3 className="accent">Certifications</h3>
-                    <ul className="about-list" style={{ listStyleType: 'none', marginLeft: 0 }}>
-                        <li>
-                            <strong>MERN Stack Development</strong><br />
-                            <span style={{ color: 'var(--text-muted)', fontSize: '0.9em' }}>Ducat IT Training Institute</span>
-                        </li>
-                    </ul>
+                    <h3 className="accent">Key Responsibilities</h3>
+                    <ol className="about-list about-list-numbered">
+                        {keyResponsibilities.map((item) => (
+                            <li key={item}>{item}</li>
+                        ))}
+                    </ol>
                 </motion.div>
             </div>
+
+            <motion.p
+                className="about-summary"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.8 }}
+            >
+                In short, I&apos;m a FullStack developer delivering modern, scalable web applications efficiently in a unified JavaScript ecosystem.
+            </motion.p>
         </section>
     );
 };
