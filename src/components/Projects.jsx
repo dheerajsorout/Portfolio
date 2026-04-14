@@ -4,21 +4,25 @@ const Projects = () => {
     const projects = [
         {
             title: 'BookMyInfluencer',
+            icon: 'fas fa-bullhorn',
             desc: 'Developed a platform for brands to collaborate with influencers. Implemented discovery, campaign tracking, and workflows.',
             link: 'https://bookmyinfluencer.vercel.app/'
         },
         {
             title: 'Data-Pedia AI',
+            icon: 'fas fa-brain',
             desc: 'Built an AI-powered spreadsheet assistant using natural language processing for data cleaning and insights.',
             link: 'https://data-pedia-ai.vercel.app/'
         },
         {
             title: 'Lead-Genius',
+            icon: 'fas fa-chart-line',
             desc: 'Developed a lead management system for organizing and tracking business leads efficiently.',
-            link: null
+            link: 'https://lead-genius-nn4h.vercel.app/'
         },
         {
             title: 'Hotel-Hider',
+            icon: 'fas fa-hotel',
             desc: 'Designed a modern hotel website with responsive UI and service showcase.',
             link: 'https://hider-two.vercel.app/'
         }
@@ -68,7 +72,10 @@ const Projects = () => {
                         }}
                     >
                         <div>
-                            <h3 className="text-center" style={{ color: 'var(--text-main)' }}>{project.title}</h3>
+                            <h3 className="text-center" style={{ color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                                {project.icon && <i className={project.icon} style={{ color: 'var(--accent)' }}></i>}
+                                {project.title}
+                            </h3>
                             <p className="project-desc text-center">{project.desc}</p>
                         </div>
                         {project.link && (
