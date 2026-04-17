@@ -34,27 +34,27 @@ const ThemeToggle = () => {
     const buttonAnimation = isGoingDark
         ? {
               boxShadow:
-                  '0 0 0 1px rgba(56, 189, 248, 0.24), 0 0 20px rgba(56, 189, 248, 0.28), 0 0 34px rgba(16, 185, 129, 0.16)',
+                  '0 18px 28px rgba(2, 6, 23, 0.38), 0 10px 18px rgba(8, 47, 73, 0.26), 0 0 0 1px rgba(56, 189, 248, 0.24), 0 0 20px rgba(56, 189, 248, 0.28), 0 0 34px rgba(16, 185, 129, 0.16)',
               borderColor: 'rgba(125, 211, 252, 0.36)',
               color: '#e2e8f0',
           }
         : isGoingLight
           ? {
                 boxShadow:
-                    '0 0 0 1px rgba(255, 255, 255, 0.54), 0 0 18px rgba(255, 255, 255, 0.34), 0 0 30px rgba(251, 191, 36, 0.18)',
+                    '0 18px 28px rgba(148, 97, 0, 0.16), 0 10px 20px rgba(251, 191, 36, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.54), 0 0 18px rgba(255, 255, 255, 0.34), 0 0 30px rgba(251, 191, 36, 0.18)',
                 borderColor: 'rgba(253, 224, 71, 0.38)',
                 color: '#92400e',
             }
           : isDark
             ? {
                   boxShadow:
-                      '0 0 0 1px rgba(56, 189, 248, 0.18), 0 0 14px rgba(56, 189, 248, 0.2), 0 0 24px rgba(16, 185, 129, 0.1)',
+                      '0 16px 24px rgba(2, 6, 23, 0.34), 0 8px 16px rgba(8, 47, 73, 0.22), 0 0 0 1px rgba(56, 189, 248, 0.18), 0 0 14px rgba(56, 189, 248, 0.2), 0 0 24px rgba(16, 185, 129, 0.1)',
                   borderColor: 'rgba(125, 211, 252, 0.28)',
                   color: '#e2e8f0',
               }
             : {
                   boxShadow:
-                      '0 0 0 1px rgba(245, 158, 11, 0.16), 0 0 14px rgba(251, 191, 36, 0.2), 0 0 22px rgba(245, 158, 11, 0.12)',
+                      '0 16px 24px rgba(148, 97, 0, 0.14), 0 8px 18px rgba(251, 191, 36, 0.18), 0 0 0 1px rgba(245, 158, 11, 0.16), 0 0 14px rgba(251, 191, 36, 0.2), 0 0 22px rgba(245, 158, 11, 0.12)',
                   borderColor: 'rgba(245, 158, 11, 0.26)',
                   color: '#92400e',
               };
@@ -73,6 +73,24 @@ const ThemeToggle = () => {
           }
         : iconSpring;
 
+    const shellAnimation = isGoingDark
+        ? { rotateX: [0, 14, 6], rotateY: [0, -16, -8], scale: [1, 1.08, 1.02] }
+        : isGoingLight
+          ? { rotateX: [0, -12, -5], rotateY: [0, 15, 7], scale: [0.98, 1.08, 1.03] }
+          : { rotateX: isDark ? 9 : -9, rotateY: isDark ? -10 : 10, scale: isDark ? 0.99 : 1.02 };
+
+    const shellTransition = isTransitioning
+        ? {
+              duration: 0.78,
+              ease: [0.22, 1, 0.36, 1],
+              times: [0, 0.45, 1],
+          }
+        : {
+              type: 'spring',
+              stiffness: 220,
+              damping: 18,
+          };
+
     const handleClick = () => {
         toggleTheme(buttonRef.current);
     };
@@ -86,12 +104,15 @@ const ThemeToggle = () => {
             disabled={isTransitioning}
             onClick={handleClick}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            whileHover={isTransitioning ? undefined : { scale: 1.05, y: -1 }}
-            whileTap={isTransitioning ? undefined : { scale: 0.94 }}
+            whileHover={isTransitioning ? undefined : { scale: 1.08, y: -2, rotate: isDark ? -2 : 2 }}
+            whileTap={isTransitioning ? undefined : { scale: 0.95, y: 1 }}
             animate={buttonAnimation}
             transition={isTransitioning ? { duration: 0.68, ease: [0.22, 1, 0.36, 1] } : iconSpring}
         >
-            <span className="theme-toggle-shell">
+            <span className="theme-toggle-orbit theme-toggle-orbit-primary" aria-hidden="true" />
+            <span className="theme-toggle-orbit theme-toggle-orbit-secondary" aria-hidden="true" />
+
+            <motion.span className="theme-toggle-shell" animate={shellAnimation} transition={shellTransition}>
                 <motion.svg
                     className="theme-toggle-icon"
                     viewBox="0 0 24 24"
@@ -319,7 +340,7 @@ const ThemeToggle = () => {
                         />
                     </motion.g>
                 </motion.svg>
-            </span>
+            </motion.span>
 
             <span className="sr-only">{isDark ? 'Switch to light mode' : 'Switch to dark mode'}</span>
         </motion.button>

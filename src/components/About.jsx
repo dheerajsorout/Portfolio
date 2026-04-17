@@ -23,6 +23,66 @@ const About = () => {
         'Testing and deployment support: preparing applications for stable production delivery.'
     ];
 
+    const sections = [
+        {
+            title: 'Core Strengths',
+            badge: '01',
+            className: 'about-ref-card-strengths',
+            items: coreStrengths
+        },
+        {
+            title: 'Key Responsibilities',
+            badge: '02',
+            className: 'about-ref-card-responsibilities',
+            items: keyResponsibilities
+        }
+    ];
+
+    const gridVariants = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: 0.14,
+                delayChildren: 0.08
+            }
+        }
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 36, scale: 0.98 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+                duration: 0.55,
+                ease: [0.16, 1, 0.3, 1]
+            }
+        }
+    };
+
+    const listVariants = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: 0.07,
+                delayChildren: 0.08
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, x: -18 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: {
+                duration: 0.35,
+                ease: [0.22, 1, 0.36, 1]
+            }
+        }
+    };
+
     return (
         <section id="about" className="about section">
             <motion.h2
@@ -45,29 +105,37 @@ const About = () => {
             </motion.p>
 
             <motion.div
-                className="about-ref-board card"
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.25 }}
+                className="about-ref-grid"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                variants={gridVariants}
             >
-                <div className="about-ref-column">
-                    <h3 className="about-ref-heading">Core Strengths</h3>
-                    <ol className="about-ref-list">
-                        {coreStrengths.map((item) => (
-                            <li key={item}>{item}</li>
-                        ))}
-                    </ol>
-                </div>
+                {sections.map((section) => (
+                    <motion.article
+                        key={section.title}
+                        className={`about-ref-card card ${section.className}`}
+                        variants={cardVariants}
+                        whileHover={{ y: -8, transition: { duration: 0.24 } }}
+                    >
+                        <motion.h3 className="about-ref-heading" variants={itemVariants}>
+                            <span className="about-ref-heading-badge">{section.badge}</span>
+                            <span>{section.title}</span>
+                        </motion.h3>
 
-                <div className="about-ref-column">
-                    <h3 className="about-ref-heading">Key Responsibilities</h3>
-                    <ol className="about-ref-list">
-                        {keyResponsibilities.map((item) => (
-                            <li key={item}>{item}</li>
-                        ))}
-                    </ol>
-                </div>
+                        <motion.ol className="about-ref-list" variants={listVariants}>
+                            {section.items.map((item) => (
+                                <motion.li
+                                    key={item}
+                                    variants={itemVariants}
+                                    whileHover={{ x: 6, transition: { duration: 0.2 } }}
+                                >
+                                    {item}
+                                </motion.li>
+                            ))}
+                        </motion.ol>
+                    </motion.article>
+                ))}
             </motion.div>
 
             <motion.p

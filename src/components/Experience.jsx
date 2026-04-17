@@ -33,7 +33,6 @@ const Experience = () => {
                     <motion.div
                         key={`${experience.company}-${experience.title}`}
                         className="card experience-card"
-                        style={{ margin: '0 auto', maxWidth: '700px', textAlign: 'center' }}
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         whileHover={{ y: -10, transition: { duration: 0.3 } }}
