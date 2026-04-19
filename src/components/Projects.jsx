@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { hoverTilt, revealUp, sectionStagger, viewport } from './animations/variants';
 
 const Projects = () => {
     const projects = [
@@ -29,21 +30,6 @@ const Projects = () => {
         }
     ];
 
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
-    };
-
     const renderProjectTitle = (project) => {
         if (project.slug === 'bookmyinfluencer') {
             return (
@@ -60,11 +46,17 @@ const Projects = () => {
         if (project.slug === 'data-pedia-ai') {
             return (
                 <div className="project-brand project-brand-datapedia" aria-label="DATAPEDIA.AI">
+                    <span className="project-brand-datapedia-aura" aria-hidden="true" />
                     <span className="project-brand-mark project-brand-mark-datapedia">
+                        <span className="project-brand-datapedia-grid" aria-hidden="true" />
                         <span className="project-brand-datapedia-glyph">D</span>
+                        <span className="project-brand-datapedia-scan" aria-hidden="true" />
                     </span>
                     <span className="project-brand-stack">
-                        <span className="project-brand-datapedia-title">DATAPEDIA.AI</span>
+                        <span className="project-brand-datapedia-title-row">
+                            <span className="project-brand-datapedia-title">DATAPEDIA</span>
+                            <span className="project-brand-datapedia-pill">AI</span>
+                        </span>
                         <span className="project-brand-datapedia-tagline">LET&apos;S EXPLORE DATA</span>
                     </span>
                 </div>
@@ -86,9 +78,7 @@ const Projects = () => {
             return (
                 <div className="project-brand project-brand-hotelhider" aria-label="Hotel Hider">
                     <span className="project-brand-mark project-brand-mark-hotelhider" aria-hidden="true">
-                        <span className="project-brand-hotelhider-glyph">
-                            <span className="project-brand-hotelhider-glyph-core"></span>
-                        </span>
+                        H
                     </span>
                     <span className="project-brand-stack">
                         <span className="project-brand-hotelhider-overline">HOTEL</span>
@@ -107,36 +97,48 @@ const Projects = () => {
     };
 
     return (
-        <section id="projects" className="projects section">
-            <motion.h2 
-                className="section-title text-gradient" 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true, amount: 0.3 }}
+        <motion.section
+            id="projects"
+            className="projects section"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+            variants={sectionStagger(0.14, 0.08)}
+        >
+            <motion.h2
+                className="section-title text-gradient"
+                variants={revealUp(24)}
             >
                 Projects
             </motion.h2>
-            <motion.div 
+
+            <motion.div
                 className="projects-grid dynamic-grid"
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
+                variants={sectionStagger(0.16, 0.08)}
             >
                 {projects.map((project, index) => (
-                    <motion.div 
+                    <motion.article
                         key={index}
                         className={`card project-card project-card-${project.slug}`}
                         style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-                        variants={itemVariants}
-                        whileHover={{ 
-                            y: -10,
-                            scale: 1.02, 
-                            boxShadow: "0 30px 40px -10px rgba(0, 0, 0, 0.3), 0 15px 20px -10px rgba(16, 185, 129, 0.2)",
-                            borderColor: "rgba(16, 185, 129, 0.4)"
-                        }}
+                        variants={revealUp(34 + index * 6, index * 0.06)}
+                        whileHover={hoverTilt}
                     >
+                        <motion.span
+                            className="project-card-glow"
+                            aria-hidden="true"
+                            animate={{
+                                x: [0, index % 2 === 0 ? 18 : -18, 0],
+                                y: [0, index % 2 === 0 ? -12 : 14, 0],
+                                scale: [1, 1.08, 1],
+                            }}
+                            transition={{
+                                duration: 9 + index,
+                                ease: 'easeInOut',
+                                repeat: Infinity,
+                            }}
+                        />
+
                         <div>
                             <h3 className="project-title text-center">
                                 {renderProjectTitle(project)}
@@ -145,21 +147,21 @@ const Projects = () => {
                         </div>
                         {project.link && (
                             <div className="text-center" style={{ marginTop: '15px' }}>
-                                <motion.a 
+                                <motion.a
                                     href={project.link}
-                                    target="_blank" 
+                                    target="_blank"
                                     rel="noreferrer"
                                     style={{ color: 'var(--accent)', textDecoration: 'none', fontSize: '0.9em', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                                    whileHover={{ x: 5 }}
+                                    whileHover={{ x: 6 }}
                                 >
                                     Live Demo <i className="fas fa-external-link-alt"></i>
                                 </motion.a>
                             </div>
                         )}
-                    </motion.div>
+                    </motion.article>
                 ))}
             </motion.div>
-        </section>
+        </motion.section>
     );
 };
 

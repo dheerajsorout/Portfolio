@@ -1,195 +1,293 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
-const revealTransition = {
-    duration: 0.84,
-    ease: [0.22, 1, 0.36, 1],
+const easeLiquid = [0.16, 1, 0.3, 1];
+const easeSoft = [0.22, 1, 0.36, 1];
+
+const liquidSweepTransition = {
+    duration: 1.18,
+    ease: easeLiquid,
+    times: [0, 0.84, 1],
 };
 
-const haloTransition = {
-    duration: 0.94,
-    ease: [0.16, 1, 0.3, 1],
-};
+const liquidBlobs = [
+    {
+        key: 'one',
+        className: 'theme-liquid-blob theme-liquid-blob-one',
+        animate: {
+            x: [0, 22, -8],
+            y: [-20, 10, 0],
+            scale: [0.92, 1.12, 1.02],
+        },
+        transition: {
+            duration: 1.04,
+            ease: easeSoft,
+            times: [0, 0.62, 1],
+        },
+    },
+    {
+        key: 'two',
+        className: 'theme-liquid-blob theme-liquid-blob-two',
+        animate: {
+            x: [0, 18, -6],
+            y: [-10, 12, 4],
+            scale: [0.94, 1.08, 1],
+        },
+        transition: {
+            duration: 1.1,
+            ease: easeSoft,
+            times: [0, 0.58, 1],
+            delay: 0.04,
+        },
+    },
+    {
+        key: 'three',
+        className: 'theme-liquid-blob theme-liquid-blob-three',
+        animate: {
+            x: [0, 28, -12],
+            y: [8, -18, -4],
+            scale: [0.98, 1.12, 1.04],
+        },
+        transition: {
+            duration: 1.08,
+            ease: easeSoft,
+            times: [0, 0.56, 1],
+            delay: 0.08,
+        },
+    },
+    {
+        key: 'four',
+        className: 'theme-liquid-blob theme-liquid-blob-four',
+        animate: {
+            x: [0, 18, -10],
+            y: [10, -16, 2],
+            scale: [0.96, 1.1, 1.02],
+        },
+        transition: {
+            duration: 1.08,
+            ease: easeSoft,
+            times: [0, 0.58, 1],
+            delay: 0.05,
+        },
+    },
+    {
+        key: 'five',
+        className: 'theme-liquid-blob theme-liquid-blob-five',
+        animate: {
+            x: [0, 24, -10],
+            y: [20, -8, 6],
+            scale: [0.92, 1.1, 1],
+        },
+        transition: {
+            duration: 1.12,
+            ease: easeSoft,
+            times: [0, 0.6, 1],
+            delay: 0.1,
+        },
+    },
+];
 
-const createStars = () =>
-    Array.from({ length: 12 }, (_, index) => ({
-        id: index,
-        top: `${6 + ((index * 17) % 82)}%`,
-        left: `${4 + ((index * 31) % 92)}%`,
-        size: 1.2 + (index % 3) * 0.9,
-        opacity: 0.26 + (index % 4) * 0.1,
-        delay: index * 0.22,
-        duration: 3.1 + (index % 5) * 0.45,
-    }));
+const foamDrops = [
+    {
+        key: 'a',
+        className: 'theme-liquid-foam theme-liquid-foam-one',
+        animate: {
+            opacity: [0, 0.72, 0],
+            x: [0, 12, 24],
+            y: [0, -10, -16],
+            scale: [0.7, 1, 1.08],
+        },
+        transition: {
+            duration: 0.72,
+            ease: easeSoft,
+            times: [0, 0.42, 1],
+            delay: 0.24,
+        },
+    },
+    {
+        key: 'b',
+        className: 'theme-liquid-foam theme-liquid-foam-two',
+        animate: {
+            opacity: [0, 0.6, 0],
+            x: [0, 14, 26],
+            y: [0, 8, 18],
+            scale: [0.8, 1.04, 1.12],
+        },
+        transition: {
+            duration: 0.7,
+            ease: easeSoft,
+            times: [0, 0.38, 1],
+            delay: 0.28,
+        },
+    },
+    {
+        key: 'c',
+        className: 'theme-liquid-foam theme-liquid-foam-three',
+        animate: {
+            opacity: [0, 0.5, 0],
+            x: [0, 10, 18],
+            y: [0, -14, -24],
+            scale: [0.72, 0.98, 1.08],
+        },
+        transition: {
+            duration: 0.76,
+            ease: easeSoft,
+            times: [0, 0.42, 1],
+            delay: 0.32,
+        },
+    },
+];
 
-const createRays = () =>
-    Array.from({ length: 5 }, (_, index) => ({
-        id: index,
-        top: `${8 + index * 13}%`,
-        right: `${-8 + index * 2}%`,
-        width: `${34 + index * 6}vw`,
-        rotation: -28 + index * 9,
-        opacity: 0.07 + index * 0.03,
-        delay: index * 0.14,
-        duration: 4.6 + index * 0.4,
-    }));
+const ThemeStage = ({ theme, className = '' }) => (
+    <div className={`theme-stage-swatch theme-stage-swatch--${theme} ${className}`.trim()} />
+);
 
-const getCircleStyle = (transition) => {
-    const diameter = transition.radius * 2.45;
+const LiquidThemeTransition = ({ transition }) => (
+    <motion.div
+        className={`theme-liquid-transition theme-liquid-transition--${transition.nextTheme}`}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
+    >
+        <svg className="theme-liquid-defs" width="0" height="0" aria-hidden="true" focusable="false">
+            <defs>
+                <filter id="theme-liquid-goo">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                    <feColorMatrix
+                        in="blur"
+                        mode="matrix"
+                        values="
+                            1 0 0 0 0
+                            0 1 0 0 0
+                            0 0 1 0 0
+                            0 0 0 22 -10
+                        "
+                        result="goo"
+                    />
+                    <feBlend in="SourceGraphic" in2="goo" />
+                </filter>
+            </defs>
+        </svg>
 
-    return {
-        width: `${diameter}px`,
-        height: `${diameter}px`,
-        left: `${transition.origin.x}px`,
-        top: `${transition.origin.y}px`,
-    };
-};
+        <ThemeStage theme={transition.previousTheme} className="theme-liquid-backdrop" />
 
-const ThemeScene = ({ theme, stars, rays }) => {
-    const isDark = theme === 'dark';
+        <motion.span
+            className="theme-liquid-haze"
+            initial={{ opacity: 0.04, scale: 0.94 }}
+            animate={{
+                opacity: [0.04, 0.22, 0.08],
+                scale: [0.94, 1.04, 1],
+            }}
+            transition={{
+                duration: 1.08,
+                ease: easeSoft,
+                times: [0, 0.54, 1],
+            }}
+        />
 
-    return (
-        <div className={`theme-scene theme-scene-${theme}`}>
-            <div className={`theme-surface theme-surface-${theme}`} />
-
-            <div className={`theme-atmosphere theme-atmosphere-${theme}`}>
-                {isDark
-                    ? stars.map((star) => (
-                          <motion.span
-                              key={`${theme}-${star.id}`}
-                              className="theme-star"
-                              style={{
-                                  top: star.top,
-                                  left: star.left,
-                                  width: `${star.size}px`,
-                                  height: `${star.size}px`,
-                              }}
-                              initial={false}
-                              animate={{
-                                  opacity: [star.opacity * 0.56, star.opacity, star.opacity * 0.72],
-                                  scale: [1, 1.14, 1],
-                              }}
-                              transition={{
-                                  duration: star.duration,
-                                  ease: 'easeInOut',
-                                  repeat: Infinity,
-                                  delay: star.delay,
-                              }}
-                          />
-                      ))
-                    : rays.map((ray) => (
-                          <span
-                              key={`${theme}-${ray.id}`}
-                              className="theme-ray-frame"
-                              style={{
-                                  top: ray.top,
-                                  right: ray.right,
-                                  width: ray.width,
-                                  transform: `rotate(${ray.rotation}deg)`,
-                              }}
-                          >
-                              <motion.span
-                                  className="theme-ray"
-                                  initial={false}
-                                  animate={{
-                                      opacity: [ray.opacity * 0.74, ray.opacity, ray.opacity * 0.82],
-                                      scaleX: [0.9, 1.04, 0.95],
-                                  }}
-                                  transition={{
-                                      duration: ray.duration,
-                                      ease: 'easeInOut',
-                                      repeat: Infinity,
-                                      delay: ray.delay,
-                                  }}
-                              />
-                          </span>
-                      ))}
-            </div>
-        </div>
-    );
-};
-
-const CircularThemeTransition = ({ transition, stars, rays }) => {
-    const circleStyle = useMemo(
-        () => getCircleStyle(transition),
-        [transition.key, transition.origin.x, transition.origin.y, transition.radius],
-    );
-
-    return (
         <motion.div
-            className="theme-transition-overlay"
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
+            className="theme-liquid-pass"
+            initial={{ x: '100%', rotate: -1.6 }}
+            animate={{
+                x: ['100%', '-3%', '0%'],
+                rotate: [-1.6, 0.45, 0],
+            }}
+            transition={liquidSweepTransition}
         >
-            <ThemeScene theme={transition.previousTheme} stars={stars} rays={rays} />
+            <ThemeStage theme={transition.nextTheme} className="theme-liquid-surface" />
 
             <motion.div
-                className={`theme-reveal-circle theme-reveal-${transition.nextTheme}`}
-                style={circleStyle}
-                initial={{
-                    scale: 0,
-                    opacity: transition.nextTheme === 'dark' ? 0.94 : 0.82,
+                className="theme-liquid-edge"
+                initial={{ x: 0, y: 0 }}
+                animate={{
+                    x: [0, -28, 0],
+                    y: [0, -10, 0],
                 }}
-                animate={{ scale: 1.03, opacity: 1 }}
-                transition={revealTransition}
+                transition={{
+                    duration: 1.12,
+                    ease: easeSoft,
+                    times: [0, 0.74, 1],
+                }}
             >
-                <ThemeScene theme={transition.nextTheme} stars={stars} rays={rays} />
+                <span className="theme-liquid-spine" />
+                <span className="theme-liquid-spine theme-liquid-spine-secondary" />
+
+                {liquidBlobs.map((blob) => (
+                    <motion.span
+                        key={blob.key}
+                        className={blob.className}
+                        initial={false}
+                        animate={blob.animate}
+                        transition={blob.transition}
+                    />
+                ))}
+
+                {foamDrops.map((drop) => (
+                    <motion.span
+                        key={drop.key}
+                        className={drop.className}
+                        initial={{ opacity: 0 }}
+                        animate={drop.animate}
+                        transition={drop.transition}
+                    />
+                ))}
             </motion.div>
 
-            <motion.div
-                className={`theme-reveal-halo theme-reveal-halo-${transition.nextTheme}`}
-                style={circleStyle}
-                initial={{ scale: 0.12, opacity: transition.nextTheme === 'dark' ? 0.26 : 0.44 }}
-                animate={{ scale: 1.08, opacity: 0 }}
-                transition={haloTransition}
-            />
-
-            <motion.div
-                className={`theme-ripple-ring theme-ripple-ring-${transition.nextTheme}`}
-                style={circleStyle}
-                initial={{ scale: 0.16, opacity: transition.nextTheme === 'dark' ? 0.3 : 0.48 }}
-                animate={{ scale: 1.12, opacity: 0 }}
+            <motion.span
+                className="theme-liquid-shadow-band"
+                initial={{ opacity: 0.1, scaleY: 0.88 }}
+                animate={{
+                    opacity: [0.1, 0.22, 0],
+                    scaleY: [0.88, 1.06, 1.12],
+                }}
                 transition={{
-                    duration: 0.98,
-                    ease: [0.16, 1, 0.3, 1],
+                    duration: 0.96,
+                    ease: easeSoft,
+                    times: [0, 0.56, 1],
                 }}
             />
 
-            <motion.div
-                className={`theme-ripple-ring theme-ripple-ring-secondary theme-ripple-ring-${transition.nextTheme}`}
-                style={circleStyle}
-                initial={{ scale: 0.22, opacity: transition.nextTheme === 'dark' ? 0.22 : 0.38 }}
-                animate={{ scale: 1.22, opacity: 0 }}
+            <motion.span
+                className="theme-liquid-highlight"
+                initial={{ opacity: 0.18, scaleY: 0.82, x: -16 }}
+                animate={{
+                    opacity: [0.18, 0.42, 0],
+                    scaleY: [0.82, 1.06, 1.12],
+                    x: [-16, 8, 18],
+                }}
                 transition={{
-                    duration: 1.06,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: 0.08,
+                    duration: 1,
+                    ease: easeSoft,
+                    times: [0, 0.52, 1],
+                }}
+            />
+
+            <motion.span
+                className="theme-liquid-glow"
+                initial={{ opacity: 0.08, scale: 0.84 }}
+                animate={{
+                    opacity: [0.08, 0.18, 0],
+                    scale: [0.84, 1.08, 1.18],
+                }}
+                transition={{
+                    duration: 1.04,
+                    ease: easeSoft,
+                    times: [0, 0.58, 1],
                 }}
             />
         </motion.div>
-    );
-};
+    </motion.div>
+);
 
 const ThemeTransitionLayer = () => {
-    const { theme, transition, isTransitioning } = useTheme();
-    const stars = useMemo(() => createStars(), []);
-    const rays = useMemo(() => createRays(), []);
+    const { transition, isTransitioning } = useTheme();
 
     return (
-        <div className="theme-stage" aria-hidden="true">
-            <ThemeScene theme={theme} stars={stars} rays={rays} />
-
+        <div className="theme-transition-layer" aria-hidden="true">
             <AnimatePresence initial={false}>
                 {isTransitioning ? (
-                    <CircularThemeTransition
-                        key={transition.key}
-                        transition={transition}
-                        stars={stars}
-                        rays={rays}
-                    />
+                    <LiquidThemeTransition key={transition.key} transition={transition} />
                 ) : null}
             </AnimatePresence>
         </div>

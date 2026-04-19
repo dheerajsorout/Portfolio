@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { hoverLift, revealScale, revealSide, revealUp, sectionStagger, viewport, viewportTight } from './animations/variants';
 
 const About = () => {
     const coreStrengths = [
@@ -38,96 +39,77 @@ const About = () => {
         }
     ];
 
-    const gridVariants = {
-        hidden: {},
-        visible: {
-            transition: {
-                staggerChildren: 0.14,
-                delayChildren: 0.08
-            }
-        }
-    };
-
-    const cardVariants = {
-        hidden: { opacity: 0, y: 36, scale: 0.98 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            transition: {
-                duration: 0.55,
-                ease: [0.16, 1, 0.3, 1]
-            }
-        }
-    };
-
-    const listVariants = {
-        hidden: {},
-        visible: {
-            transition: {
-                staggerChildren: 0.07,
-                delayChildren: 0.08
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, x: -18 },
-        visible: {
-            opacity: 1,
-            x: 0,
-            transition: {
-                duration: 0.35,
-                ease: [0.22, 1, 0.36, 1]
-            }
-        }
-    };
-
     return (
-        <section id="about" className="about section">
+        <motion.section
+            id="about"
+            className="about section"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+            variants={sectionStagger(0.14, 0.06)}
+        >
             <motion.h2
                 className="section-title"
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                variants={revealUp(24)}
             >
                 About Me
             </motion.h2>
 
             <motion.p
                 className="about-ref-intro"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.15 }}
+                variants={revealUp(20, 0.05)}
             >
-                Hello! It&apos;s <strong>Dheeraj</strong>, a <strong>MERN Stack Developer</strong> with 1.3+ years of experience building responsive and user-friendly web applications. I can handle both Frontend and Backend perfectly. My core JavaScript, React, and Next.js skills are strong. I specialize in turning complex problems into simple, elegant solutions.
+                Hello! It&apos;s <strong>Dheeraj</strong>, a <strong>MERN Stack Developer</strong> with 3+ Months of experience building responsive and user-friendly web applications. I can handle both Frontend and Backend perfectly. My core JavaScript, React, and Next.js skills are strong. I specialize in turning complex problems into simple, elegant solutions.
             </motion.p>
 
             <motion.div
                 className="about-ref-grid"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                variants={gridVariants}
+                variants={sectionStagger(0.14, 0.08)}
             >
-                {sections.map((section) => (
+                {sections.map((section, sectionIndex) => (
                     <motion.article
                         key={section.title}
                         className={`about-ref-card card ${section.className}`}
-                        variants={cardVariants}
-                        whileHover={{ y: -8, transition: { duration: 0.24 } }}
+                        variants={revealUp(36 + sectionIndex * 6, sectionIndex * 0.05)}
+                        whileHover={hoverLift}
                     >
-                        <motion.h3 className="about-ref-heading" variants={itemVariants}>
-                            <span className="about-ref-heading-badge">{section.badge}</span>
+                        <motion.span
+                            className="about-card-glow"
+                            aria-hidden="true"
+                            animate={{
+                                x: sectionIndex === 0 ? [0, 12, -6, 0] : [0, -14, 8, 0],
+                                y: sectionIndex === 0 ? [0, -14, 8, 0] : [0, 12, -10, 0],
+                                scale: [1, 1.06, 0.96, 1],
+                            }}
+                            transition={{
+                                duration: sectionIndex === 0 ? 9.5 : 11,
+                                ease: 'easeInOut',
+                                repeat: Infinity,
+                            }}
+                        />
+
+                        <motion.h3 className="about-ref-heading" variants={revealUp(20, 0.02)}>
+                            <motion.span
+                                className="about-ref-heading-badge"
+                                variants={revealScale(0.04)}
+                                whileHover={{ rotate: -4, scale: 1.06 }}
+                            >
+                                {section.badge}
+                            </motion.span>
                             <span>{section.title}</span>
                         </motion.h3>
 
-                        <motion.ol className="about-ref-list" variants={listVariants}>
-                            {section.items.map((item) => (
+                        <motion.ol
+                            className="about-ref-list"
+                            variants={sectionStagger(0.06, 0.05)}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={viewportTight}
+                        >
+                            {section.items.map((item, index) => (
                                 <motion.li
                                     key={item}
-                                    variants={itemVariants}
+                                    variants={revealSide(index % 2 === 0 ? -20 : 20, index * 0.02)}
                                     whileHover={{ x: 6, transition: { duration: 0.2 } }}
                                 >
                                     {item}
@@ -140,14 +122,11 @@ const About = () => {
 
             <motion.p
                 className="about-ref-summary"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4 }}
+                variants={revealUp(20, 0.1)}
             >
                 In short, I&apos;m a FullStack developer delivering modern, scalable web applications efficiently in a unified JavaScript ecosystem.
             </motion.p>
-        </section>
+        </motion.section>
     );
 };
 

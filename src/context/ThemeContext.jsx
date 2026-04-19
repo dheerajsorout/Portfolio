@@ -11,7 +11,8 @@ import {
 
 const ThemeContext = createContext(null);
 
-export const THEME_TRANSITION_DURATION = 950;
+export const THEME_TRANSITION_DURATION = 1280;
+export const THEME_THEME_COMMIT_DELAY = 420;
 
 export const getInitialTheme = () => {
     if (typeof window === 'undefined') {
@@ -135,7 +136,8 @@ export const ThemeProvider = ({ children }) => {
         };
     });
 
-    const timeoutRef = useRef(null);
+    const transitionTimeoutRef = useRef(null);
+    const themeCommitTimeoutRef = useRef(null);
     const audioContextRef = useRef(null);
 
     useLayoutEffect(() => {
@@ -145,7 +147,8 @@ export const ThemeProvider = ({ children }) => {
 
     useEffect(() => {
         return () => {
-            window.clearTimeout(timeoutRef.current);
+            window.clearTimeout(transitionTimeoutRef.current);
+            window.clearTimeout(themeCommitTimeoutRef.current);
             audioContextRef.current?.close?.().catch?.(() => {});
         };
     }, []);
@@ -173,10 +176,13 @@ export const ThemeProvider = ({ children }) => {
                 radius: getRippleRadius(origin),
             });
 
-            setTheme(nextTheme);
+            window.clearTimeout(themeCommitTimeoutRef.current);
+            themeCommitTimeoutRef.current = window.setTimeout(() => {
+                setTheme(nextTheme);
+            }, THEME_THEME_COMMIT_DELAY);
 
-            window.clearTimeout(timeoutRef.current);
-            timeoutRef.current = window.setTimeout(() => {
+            window.clearTimeout(transitionTimeoutRef.current);
+            transitionTimeoutRef.current = window.setTimeout(() => {
                 setTransition((currentTransition) => ({
                     ...currentTransition,
                     isActive: false,

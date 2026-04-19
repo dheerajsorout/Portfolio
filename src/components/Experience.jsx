@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
+import { hoverLift, revealUp, sectionStagger, viewport } from './animations/variants';
 
 const experiences = [
     {
         title: 'Professional Training',
-        company: 'DUCAT IT Training, Noida',
-        meta: '1 Year Experience',
+        company: 'DUCAT IT Training Institute, Noida',
+        meta: '6 Months ',
         description:
             'Built strong practical knowledge in MERN stack development through hands-on training, real-world assignments, and focused work on frontend and backend fundamentals.'
     },
@@ -18,64 +19,44 @@ const experiences = [
 ];
 
 const Experience = () => {
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2
-            }
-        }
-    };
-
-    const cardVariants = {
-        hidden: { opacity: 0, x: -30 },
-        visible: { 
-            opacity: 1, 
-            x: 0,
-            transition: { type: "spring", stiffness: 100, damping: 20 }
-        }
-    };
-
     return (
-        <section id="experience" className="experience section">
+        <motion.section
+            id="experience"
+            className="experience section"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+            variants={sectionStagger(0.16, 0.08)}
+        >
             <motion.h2
                 className="section-title text-gradient"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
+                variants={revealUp(24)}
             >
                 Experience
             </motion.h2>
-            <motion.div 
+
+            <motion.div
                 className="experience-grid"
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
+                variants={sectionStagger(0.16, 0.08)}
             >
                 {experiences.map((experience, index) => (
-                    <motion.div
+                    <motion.article
                         key={`${experience.company}-${experience.title}`}
                         className="card experience-card"
-                        variants={cardVariants}
-                        whileHover={{ 
-                            y: -10, 
-                            scale: 1.02,
-                            boxShadow: "0 25px 35px -10px rgba(0, 0, 0, 0.2), 0 10px 15px -10px rgba(16, 185, 129, 0.2)"
-                        }}
+                        variants={revealUp(34 + index * 8, index * 0.06)}
+                        whileHover={hoverLift}
                     >
+                        <span className="experience-step">{index + 1 < 10 ? `0${index + 1}` : index + 1}</span>
                         <h3 className="accent">{experience.title}</h3>
                         <p className="company-date">
                             {experience.company}
                             {experience.meta ? ` | ${experience.meta}` : ''}
                         </p>
                         <p className="experience-desc">{experience.description}</p>
-                    </motion.div>
+                    </motion.article>
                 ))}
             </motion.div>
-        </section>
+        </motion.section>
     );
 };
 

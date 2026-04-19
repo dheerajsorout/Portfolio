@@ -1,6 +1,27 @@
-import { useId, useRef } from 'react';
+import { useId, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+
+const playSoftClick = () => {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1);
+    } catch (e) {
+        // ignore audio errors
+    }
+};
 
 const iconSpring = {
     type: 'spring',
@@ -30,6 +51,7 @@ const ThemeToggle = () => {
     const darkAuraId = `${iconId}-dark-aura`;
     const isGoingDark = isTransitioning && transition.nextTheme === 'dark';
     const isGoingLight = isTransitioning && transition.nextTheme === 'light';
+    const visualMode = isTransitioning ? transition.nextTheme : theme;
 
     const buttonAnimation = isGoingDark
         ? {
@@ -91,16 +113,17 @@ const ThemeToggle = () => {
               damping: 18,
           };
 
-    const handleClick = () => {
+    const handleClick = useCallback(() => {
+        playSoftClick();
         toggleTheme(buttonRef.current);
-    };
+    }, [toggleTheme]);
 
     return (
         <motion.button
             ref={buttonRef}
             type="button"
             className="theme-toggle"
-            data-mode={theme}
+            data-mode={visualMode}
             disabled={isTransitioning}
             onClick={handleClick}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -109,9 +132,6 @@ const ThemeToggle = () => {
             animate={buttonAnimation}
             transition={isTransitioning ? { duration: 0.68, ease: [0.22, 1, 0.36, 1] } : iconSpring}
         >
-            <span className="theme-toggle-orbit theme-toggle-orbit-primary" aria-hidden="true" />
-            <span className="theme-toggle-orbit theme-toggle-orbit-secondary" aria-hidden="true" />
-
             <motion.span className="theme-toggle-shell" animate={shellAnimation} transition={shellTransition}>
                 <motion.svg
                     className="theme-toggle-icon"
@@ -206,7 +226,6 @@ const ThemeToggle = () => {
                     </motion.g>
 
                     <motion.circle
-                        className="theme-toggle-sun-core"
                         cx="12"
                         cy="12"
                         r="4.85"
@@ -231,7 +250,6 @@ const ThemeToggle = () => {
                     />
 
                     <motion.circle
-                        className="theme-toggle-core"
                         cx="12"
                         cy="12"
                         r="5.2"
@@ -252,9 +270,9 @@ const ThemeToggle = () => {
                         }}
                         transition={iconTransition}
                     >
-                        <circle className="theme-toggle-crater theme-toggle-crater-large" cx="9.65" cy="10.15" r="0.86" />
-                        <circle className="theme-toggle-crater theme-toggle-crater-small" cx="8.25" cy="13.05" r="0.56" />
-                        <circle className="theme-toggle-crater theme-toggle-crater-tiny" cx="11.15" cy="14.2" r="0.34" />
+                        <circle className="theme-toggle-crater-large" cx="9.65" cy="10.15" r="0.86" />
+                        <circle className="theme-toggle-crater" cx="8.25" cy="13.05" r="0.56" />
+                        <circle className="theme-toggle-crater" cx="11.15" cy="14.2" r="0.34" />
                     </motion.g>
 
                     <motion.g

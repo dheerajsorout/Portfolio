@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { hoverLift, revealScale, revealUp, sectionStagger, viewport } from './animations/variants';
 
 const Skills = () => {
     const skills = [
@@ -19,34 +20,81 @@ const Skills = () => {
 
     const skillRows = [skills.slice(0, 7), skills.slice(7)];
 
+    const getTrackAnimation = (rowIndex) => ({
+        x: rowIndex % 2 === 0 ? ['0%', '-50%'] : ['-50%', '0%'],
+        transition: {
+            duration: rowIndex % 2 === 0 ? 22 : 26,
+            ease: 'linear',
+            repeat: Infinity,
+        },
+    });
+
     return (
-        <section id="skills" className="skills section">
+        <motion.section
+            id="skills"
+            className="skills section"
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+            variants={sectionStagger(0.12, 0.08)}
+        >
             <motion.h2
                 className="section-title"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                variants={revealUp(24)}
             >
                 Technical Skills
             </motion.h2>
 
             <motion.div
                 className="skills-showcase card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.15 }}
+                variants={revealScale(0.04)}
             >
-                <span className="skills-aura skills-aura-one" aria-hidden="true" />
-                <span className="skills-aura skills-aura-two" aria-hidden="true" />
-                <span className="skills-grid-glow" aria-hidden="true" />
+                <motion.span
+                    className="skills-aura skills-aura-one"
+                    aria-hidden="true"
+                    animate={{
+                        x: [0, 18, -10, 0],
+                        y: [0, -16, 8, 0],
+                        scale: [1, 1.08, 0.98, 1],
+                    }}
+                    transition={{
+                        duration: 12,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                    }}
+                />
+                <motion.span
+                    className="skills-aura skills-aura-two"
+                    aria-hidden="true"
+                    animate={{
+                        x: [0, -16, 10, 0],
+                        y: [0, 12, -14, 0],
+                        scale: [1, 0.96, 1.1, 1],
+                    }}
+                    transition={{
+                        duration: 13.5,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                    }}
+                />
+                <motion.span
+                    className="skills-grid-glow"
+                    aria-hidden="true"
+                    animate={{ x: ['-110%', '110%'] }}
+                    transition={{
+                        duration: 5.4,
+                        ease: 'easeInOut',
+                        repeat: Infinity,
+                        repeatDelay: 1.8,
+                    }}
+                />
 
                 {skillRows.map((row, rowIndex) => (
                     <div
                         key={`row-${rowIndex}`}
                         className={`skills-marquee ${rowIndex % 2 === 0 ? 'skills-marquee-forward' : 'skills-marquee-reverse'}`}
                     >
-                        <div className="skills-track">
+                        <motion.div className="skills-track" animate={getTrackAnimation(rowIndex)}>
                             {[...row, ...row].map((skill, index) => (
                                 <motion.span
                                     key={`${rowIndex}-${skill.name}-${index}`}
@@ -55,36 +103,35 @@ const Skills = () => {
                                         '--skill-accent': skill.accent,
                                         '--skill-soft': skill.soft,
                                         '--skill-border': skill.border,
-                                        '--skill-badge-text': skill.badgeText,
-                                        '--skill-delay': `${(index % row.length) * 0.18}s`
+                                        '--skill-badge-text': skill.badgeText
                                     }}
-                                    initial={{ opacity: 0, scale: 0.92 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
-                                    whileHover={{
-                                        y: -4,
-                                        scale: 1.03,
-                                        boxShadow: '0 14px 26px rgba(16, 185, 129, 0.2)'
-                                    }}
+                                    initial={{ opacity: 0, scale: 0.9, y: 16 }}
+                                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                    whileHover={hoverLift}
                                     transition={{
-                                        delay: rowIndex * 0.08 + (index % row.length) * 0.04,
+                                        delay: rowIndex * 0.08 + (index % row.length) * 0.035,
                                         type: 'spring',
                                         stiffness: 260,
-                                        damping: 20
+                                        damping: 20,
                                     }}
-                                    viewport={{ once: true }}
+                                    viewport={{ once: true, amount: 0.3 }}
                                     aria-hidden={index >= row.length}
                                 >
-                                    <span className="skill-chip-badge" aria-hidden="true">
+                                    <motion.span
+                                        className="skill-chip-badge"
+                                        aria-hidden="true"
+                                        whileHover={{ rotate: -5, scale: 1.06 }}
+                                    >
                                         {skill.badge}
-                                    </span>
+                                    </motion.span>
                                     <span className="skill-chip-label">{skill.name}</span>
                                 </motion.span>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
                 ))}
             </motion.div>
-        </section>
+        </motion.section>
     );
 };
 
