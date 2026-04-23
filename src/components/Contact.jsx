@@ -10,23 +10,7 @@ const Contact = () => {
         'Hi Dheeraj, I found your portfolio and would like to connect about a project.'
     )}`;
 
-    const contactHighlights = [
-        {
-            label: 'Fast Replies',
-            value: 'WhatsApp',
-            meta: 'Quickest way in.'
-        },
-        {
-            label: 'Detailed Briefs',
-            value: 'Email',
-            meta: 'Scope and docs.'
-        },
-        {
-            label: 'Quick Calls',
-            value: 'Phone',
-            meta: 'Timeline and fit.'
-        }
-    ];
+
 
     const contactMethods = [
         {
@@ -157,26 +141,7 @@ const Contact = () => {
                         ))}
                     </motion.div>
 
-                    <motion.div
-                        className="contact-highlight-grid"
-                        variants={sectionStagger(0.08, 0.12)}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={viewportTight}
-                    >
-                        {contactHighlights.map((item, index) => (
-                            <motion.div
-                                key={item.label}
-                                className="contact-highlight-card"
-                                variants={revealUp(20, index * 0.04)}
-                                whileHover={{ y: -4 }}
-                            >
-                                <span className="contact-highlight-label">{item.label}</span>
-                                <strong className="contact-highlight-value">{item.value}</strong>
-                                <span className="contact-highlight-meta">{item.meta}</span>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+
 
                     <div className="contact-actions">
                         <motion.a

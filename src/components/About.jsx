@@ -21,8 +21,7 @@ const About = () => {
         'Collaboration: working with cross-functional teams effectively.',
         'Continuous learning: staying up-to-date with latest web technologies.',
         'UI optimization: improving responsiveness, usability, and overall user experience.',
-        'Testing and deployment support: preparing applications for stable production delivery.'
-    ];
+    ]
 
     const sections = [
         {
