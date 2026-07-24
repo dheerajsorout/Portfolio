@@ -2020,6 +2020,27 @@ h3 {
     -webkit-text-fill-color: transparent;
 }
 
+.project-brand-pubesto {
+    position: relative;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    isolation: isolate;
+}
+
+.project-brand-pubesto::before {
+    content: none;
+}
+
+.project-brand-pubesto-logo {
+    display: block;
+    width: min(300px, 100%);
+    height: auto;
+    filter: drop-shadow(0 8px 18px rgba(79, 111, 255, 0.16));
+}
+
 .project-card-bookmyinfluencer {
     border-color: rgba(94, 88, 246, 0.18);
     background:
@@ -2111,6 +2132,25 @@ h3 {
 
 .project-card-hotel-hider a:hover {
     background: rgba(245, 208, 97, 0.2);
+}
+
+.project-card-pubesto-ecommerce {
+    border-color: rgba(99, 102, 241, 0.22);
+    background:
+        radial-gradient(circle at top left, rgba(115, 87, 255, 0.15), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(25, 184, 255, 0.1), transparent 30%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04)),
+        var(--bg-card);
+}
+
+.project-card-pubesto-ecommerce a {
+    color: #6675f2 !important;
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.26);
+}
+
+.project-card-pubesto-ecommerce a:hover {
+    background: rgba(99, 102, 241, 0.19);
 }
 
 /* Skills Section */
@@ -3366,6 +3406,14 @@ h3 {
     .project-brand-hotelhider-title {
         font-size: 1.02rem;
         letter-spacing: 0.12em;
+    }
+
+    .project-brand-pubesto {
+        padding: 0;
+    }
+
+    .project-brand-pubesto-logo {
+        width: min(250px, 100%);
     }
 }
 
